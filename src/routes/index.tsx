@@ -276,12 +276,12 @@ function Hero() {
           <div className="relative">
             <div aria-hidden className="absolute -inset-4 rounded-full border-2 border-dashed border-primary/40 animate-spin-slow" />
             <img
-              src={portrait.url}
-              alt="Ảnh chân dung Đinh Thanh Huy"
-              width={1086}
-              height={1448}
-              className="relative aspect-square w-64 rounded-full border-4 border-primary/50 bg-ink-card object-cover object-top shadow-glow animate-float sm:w-80"
-            />
+  src={portrait} 
+  alt="Ảnh chân dung Đinh Thanh Huy"
+  width={1086}
+  height={1448}
+  className="relative aspect-square w-64 rounded-full border-4 border-primary/50 bg-ink-card object-cover object-top shadow-glow animate-float sm:w-80"
+/>
           </div>
         </div>
       </div>
