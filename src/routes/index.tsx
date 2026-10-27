@@ -239,7 +239,7 @@ function Work() {
                     src={w.img}
                     alt={w.title}
                     loading="lazy"
-                    className="aspect-[16/10] w-full bg-ink object-cover object-left"
+                    className={`aspect-[16/10] w-full bg-ink ${w.img === codeSnippet.url ? "object-contain" : "object-cover"}`}
                   />
                   <div className="flex flex-1 flex-col p-6">
                     <h3 className="text-xl font-bold">{w.title}</h3>
