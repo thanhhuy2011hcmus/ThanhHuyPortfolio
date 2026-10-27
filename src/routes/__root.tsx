@@ -78,11 +78,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Đinh Thanh Huy — Portfolio" },
-      { name: "description", content: "Portfolio cá nhân của Đinh Thanh Huy." },
+      { title: "Đinh Thanh Huy — Hồ sơ năng lực" },
+      { name: "description", content: "Hồ sơ năng lực của Đinh Thanh Huy." },
       { name: "author", content: "Đinh Thanh Huy" },
-      { property: "og:title", content: "Đinh Thanh Huy — Portfolio" },
-      { property: "og:description", content: "Portfolio cá nhân của Đinh Thanh Huy." },
+      { property: "og:title", content: "Đinh Thanh Huy — Hồ sơ năng lực" },
+      { property: "og:description", content: "Hồ sơ năng lực của Đinh Thanh Huy." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },
@@ -106,9 +106,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="vi">
+    <html lang="vi" className="dark" suppressHydrationWarning>
       <head>
         <HeadContent />
+        <script dangerouslySetInnerHTML={{ __html: `try{if(localStorage.getItem("theme")==="light")document.documentElement.classList.remove("dark")}catch(e){}` }} />
       </head>
       <body>
         {children}
