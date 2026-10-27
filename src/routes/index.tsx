@@ -32,15 +32,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-
-<Avatar className="w-48 h-48 md:w-64 md:h-64 mx-auto border-4 border-[#4CAF50] shadow-lg shadow-[#4CAF50]/20">
-  <AvatarImage 
-    src="https://raw.githubusercontent.com/thanhhuy2011hcmus/prompt-ready-checklist/main/src/assets/portrait.png" 
-    alt="Đinh Thanh Huy" 
-    className="object-cover"
-  />
-  <AvatarFallback className="text-2xl font-bold bg-gray-800 text-white">TH</AvatarFallback>
-</Avatar>
+import portrait from "@/assets/portrait.png";
 const GITHUB = "https://github.com/thanhhuy2011hcmus";
 
 export const Route = createFileRoute("/")({
