@@ -7,11 +7,19 @@ export function ContactForm() {
     e.preventDefault();
     setStatus('loading');
     
-    // Lấy dữ liệu từ form
     const formData = new FormData(e.currentTarget);
     
-    // TODO: Thay YOUR_ACCESS_KEY bằng key bạn nhận được từ Web3Forms
-    formData.append("access_key", "a22b2d32-148b-4bcc-b16b-15e1683689ea");
+    // BẮT BUỘC: Bạn phải lấy mã Access Key từ email do Web3Forms gửi
+    // và dán đè lên dòng chữ YOUR_ACCESS_KEY_HERE bên dưới
+    const accessKey = "a22b2d32-148b-4bcc-b16b-15e1683689ea";
+    
+    if (accessKey === "YOUR_ACCESS_KEY_HERE") {
+      alert("Lỗi: Bạn chưa điền mã Access Key của Web3Forms vào code!");
+      setStatus('error');
+      return;
+    }
+    
+    formData.append("access_key", accessKey);
 
     try {
       const response = await fetch("https://api.web3forms.com/submit", {
@@ -23,23 +31,27 @@ export function ContactForm() {
 
       if (data.success) {
         setStatus('success');
-        e.currentTarget.reset(); // Xóa trắng form sau khi gửi thành công
+        e.currentTarget.reset(); 
       } else {
         setStatus('error');
+        console.error("Lỗi từ Web3Forms:", data);
       }
     } catch (error) {
-      console.error("Lỗi khi gửi email:", error);
+      console.error("Lỗi mạng:", error);
       setStatus('error');
     }
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">Liên hệ với mình</h2>
+    <div className="max-w-xl mx-auto p-8 bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-100">
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Liên hệ với mình</h2>
+        <p className="text-gray-500 mt-2 font-medium">Hãy để lại lời nhắn, mình sẽ phản hồi sớm nhất.</p>
+      </div>
       
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="email" className="block text-sm font-bold text-gray-800 mb-2">
             Email của bạn
           </label>
           <input
@@ -47,13 +59,14 @@ export function ContactForm() {
             id="email"
             name="email"
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            // text-gray-900 và bg-gray-50 giúp chữ nổi bật, dễ đọc, không bị trùng màu nền
+            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all placeholder:text-gray-400 font-medium"
             placeholder="example@gmail.com"
           />
         </div>
 
         <div>
-          <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="subject" className="block text-sm font-bold text-gray-800 mb-2">
             Tiêu đề
           </label>
           <input
@@ -61,21 +74,21 @@ export function ContactForm() {
             id="subject"
             name="subject"
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all placeholder:text-gray-400 font-medium"
             placeholder="Bạn muốn trao đổi về..."
           />
         </div>
 
         <div>
-          <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="message" className="block text-sm font-bold text-gray-800 mb-2">
             Nội dung
           </label>
           <textarea
             id="message"
             name="message"
             required
-            rows={4}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+            rows={5}
+            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none resize-none transition-all placeholder:text-gray-400 font-medium"
             placeholder="Nhập nội dung tin nhắn..."
           />
         </div>
@@ -83,21 +96,24 @@ export function ContactForm() {
         <button
           type="submit"
           disabled={status === 'loading'}
-          className="w-full bg-blue-600 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-700 transition-colors disabled:bg-blue-400 disabled:cursor-not-allowed"
+          className="w-full bg-blue-600 text-white font-bold py-3.5 px-4 rounded-xl hover:bg-blue-700 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 disabled:bg-blue-300 disabled:cursor-not-allowed disabled:transform-none mt-2"
         >
-          {status === 'loading' ? 'Đang gửi...' : 'Gửi tin nhắn'}
+          {status === 'loading' ? 'Đang xử lý...' : 'Gửi tin nhắn'}
         </button>
 
-        {/* Hiển thị thông báo trạng thái */}
         {status === 'success' && (
-          <p className="text-green-600 text-sm text-center font-medium mt-2">
-            Gửi thành công! Mình sẽ phản hồi sớm nhất có thể.
-          </p>
+          <div className="p-4 bg-green-50 rounded-xl border border-green-200 mt-4">
+            <p className="text-green-700 text-sm text-center font-bold">
+              🎉 Gửi thành công! Mình đã nhận được tin nhắn.
+            </p>
+          </div>
         )}
         {status === 'error' && (
-          <p className="text-red-600 text-sm text-center font-medium mt-2">
-            Có lỗi xảy ra. Vui lòng thử lại sau.
-          </p>
+          <div className="p-4 bg-red-50 rounded-xl border border-red-200 mt-4">
+            <p className="text-red-700 text-sm text-center font-bold">
+              Có lỗi xảy ra. Hãy chắc chắn bạn đã nhập đúng email và cấu hình Access Key.
+            </p>
+          </div>
         )}
       </form>
     </div>
