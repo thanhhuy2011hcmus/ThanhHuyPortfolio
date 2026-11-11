@@ -20,7 +20,6 @@ export function ContactForm() {
       object[key] = value.toString();
     });
     const json = JSON.stringify(object);
-    const json = JSON.stringify(object);
 
     try {
       const response = await fetch("https://api.web3forms.com/submit", {
