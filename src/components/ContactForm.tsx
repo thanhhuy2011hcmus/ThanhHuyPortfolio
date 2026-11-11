@@ -1,57 +1,69 @@
 import { useState } from 'react';
 
+type Status = 'idle' | 'loading' | 'success' | 'error';
+
 export function ContactForm() {
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [status, setStatus] = useState<Status>('idle');
+  const [errorMsg, setErrorMsg] = useState('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setStatus('loading');
-    
-    const formData = new FormData(e.currentTarget);
-    
-    // Key của bạn
-    const accessKey = "a22b2d32-148b-4bcc-b16b-15e1683689ea"; 
-    formData.append("access_key", accessKey);
 
-    // Chuyển đổi dữ liệu sang JSON an toàn cho TypeScript
-    const object: Record<string, string> = {};
+    // Lưu form lại NGAY, vì sau await thì e.currentTarget sẽ thành null
+    const form = e.currentTarget;
+
+    setStatus('loading');
+    setErrorMsg('');
+
+    const formData = new FormData(form);
+    formData.append('access_key', 'a22b2d32-148b-4bcc-b16b-15e1683689ea');
+
+    const payload: Record<string, string> = {};
     formData.forEach((value, key) => {
-      object[key] = value.toString();
+      payload[key] = value.toString();
     });
-    const json = JSON.stringify(object);
 
     try {
-      const response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
-        body: json,
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
 
       if (data.success) {
         setStatus('success');
-        e.currentTarget.reset(); 
+        form.reset(); // dùng biến đã lưu, không dùng e.currentTarget
       } else {
+        console.error('Lỗi từ Web3Forms:', data);
+        setErrorMsg(data.message || 'Không gửi được tin nhắn.');
         setStatus('error');
-        console.error("Lỗi từ Web3Forms:", data); 
       }
     } catch (error) {
-      console.error("Lỗi mạng:", error);
+      console.error('Lỗi mạng:', error);
+      setErrorMsg('Không kết nối được. Hãy kiểm tra mạng rồi thử lại.');
       setStatus('error');
     }
   };
 
+  const inputClass =
+    'w-full px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all placeholder:text-gray-400 font-medium';
+
   return (
     <div className="max-w-xl mx-auto p-8 bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-100">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Liên hệ với mình</h2>
-        <p className="text-gray-500 mt-2 font-medium">Hãy để lại lời nhắn, mình sẽ phản hồi sớm nhất.</p>
+        <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">
+          Liên hệ với mình
+        </h2>
+        <p className="text-gray-500 mt-2 font-medium">
+          Hãy để lại lời nhắn, mình sẽ phản hồi sớm nhất.
+        </p>
       </div>
-      
+
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
           <label htmlFor="email" className="block text-sm font-bold text-gray-800 mb-2">
@@ -62,7 +74,7 @@ export function ContactForm() {
             id="email"
             name="email"
             required
-            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all placeholder:text-gray-400 font-medium"
+            className={inputClass}
             placeholder="example@gmail.com"
           />
         </div>
@@ -76,7 +88,7 @@ export function ContactForm() {
             id="subject"
             name="subject"
             required
-            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all placeholder:text-gray-400 font-medium"
+            className={inputClass}
             placeholder="Bạn muốn trao đổi về..."
           />
         </div>
@@ -90,7 +102,7 @@ export function ContactForm() {
             name="message"
             required
             rows={5}
-            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none resize-none transition-all placeholder:text-gray-400 font-medium"
+            className={`${inputClass} resize-none`}
             placeholder="Nhập nội dung tin nhắn..."
           />
         </div>
@@ -110,10 +122,11 @@ export function ContactForm() {
             </p>
           </div>
         )}
+
         {status === 'error' && (
           <div className="p-4 bg-red-50 rounded-xl border border-red-200 mt-4">
             <p className="text-red-700 text-sm text-center font-bold">
-              Có lỗi xảy ra. Hãy chắc chắn bạn đã nhập đúng email và cấu hình Access Key.
+              Có lỗi xảy ra: {errorMsg}
             </p>
           </div>
         )}
