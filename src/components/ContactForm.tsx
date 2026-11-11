@@ -9,15 +9,40 @@ export function ContactForm() {
     
     const formData = new FormData(e.currentTarget);
     
-    // BẮT BUỘC: Bạn phải lấy mã Access Key từ email do Web3Forms gửi
-    // và dán đè lên dòng chữ YOUR_ACCESS_KEY_HERE bên dưới
-    const accessKey = "a22b2d32-148b-4bcc-b16b-15e1683689ea";
+    // Bạn giữ nguyên dòng accessKey đã điền đúng của bạn
+    const accessKey = "a22b2d32-148b-4bcc-b16b-15e1683689ea"; 
     
-    if (accessKey === "YOUR_ACCESS_KEY_HERE") {
-      alert("Lỗi: Bạn chưa điền mã Access Key của Web3Forms vào code!");
+    formData.append("access_key", accessKey);
+
+    // Bổ sung bước này: Chuyển đổi FormData sang định dạng chuẩn JSON
+    const object = Object.fromEntries(formData.entries());
+    const json = JSON.stringify(object);
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: json,
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setStatus('success');
+        e.currentTarget.reset(); 
+      } else {
+        setStatus('error');
+        // In chi tiết lỗi ra console để dễ gỡ lỗi
+        console.error("Lỗi từ Web3Forms:", data); 
+      }
+    } catch (error) {
+      console.error("Lỗi mạng:", error);
       setStatus('error');
-      return;
     }
+  };
     
     formData.append("access_key", accessKey);
 
