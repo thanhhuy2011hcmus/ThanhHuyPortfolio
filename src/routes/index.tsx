@@ -420,6 +420,20 @@ function Work() {
   );
 }
 
+import { ContactForm } from '../components/ContactForm'; // Chỉnh lại đường dẫn nếu cần
+
+export default function HomePage() {
+  return (
+    <div>
+      {/* Các nội dung khác của portfolio */}
+      
+      <section className="py-10">
+        <ContactForm />
+      </section>
+    </div>
+  );
+}
+
 function Contact() {
   const [sent, setSent] = useState(false);
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
