@@ -9,12 +9,11 @@ export function ContactForm() {
     
     const formData = new FormData(e.currentTarget);
     
-    // Bạn giữ nguyên dòng accessKey đã điền đúng của bạn
+    // Key của bạn
     const accessKey = "a22b2d32-148b-4bcc-b16b-15e1683689ea"; 
-    
     formData.append("access_key", accessKey);
 
-    // SỬA LẠI: Dùng kiểu string thay vì any để vượt qua kiểm duyệt TypeScript của Vercel
+    // Chuyển đổi dữ liệu sang JSON an toàn cho TypeScript
     const object: Record<string, string> = {};
     formData.forEach((value, key) => {
       object[key] = value.toString();
@@ -38,31 +37,7 @@ export function ContactForm() {
         e.currentTarget.reset(); 
       } else {
         setStatus('error');
-        // In chi tiết lỗi ra console để dễ gỡ lỗi
         console.error("Lỗi từ Web3Forms:", data); 
-      }
-    } catch (error) {
-      console.error("Lỗi mạng:", error);
-      setStatus('error');
-    }
-  };
-    
-    formData.append("access_key", accessKey);
-
-    try {
-      const response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        setStatus('success');
-        e.currentTarget.reset(); 
-      } else {
-        setStatus('error');
-        console.error("Lỗi từ Web3Forms:", data);
       }
     } catch (error) {
       console.error("Lỗi mạng:", error);
@@ -87,7 +62,6 @@ export function ContactForm() {
             id="email"
             name="email"
             required
-            // text-gray-900 và bg-gray-50 giúp chữ nổi bật, dễ đọc, không bị trùng màu nền
             className="w-full px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all placeholder:text-gray-400 font-medium"
             placeholder="example@gmail.com"
           />
