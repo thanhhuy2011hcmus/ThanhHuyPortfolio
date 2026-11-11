@@ -14,8 +14,11 @@ export function ContactForm() {
     
     formData.append("access_key", accessKey);
 
-    // Bổ sung bước này: Chuyển đổi FormData sang định dạng chuẩn JSON
-    const object = Object.fromEntries(formData.entries());
+    // CÁCH MỚI: Chuyển đổi dữ liệu sang JSON an toàn, không bị lỗi TypeScript
+    const object: Record<string, any> = {};
+    formData.forEach((value, key) => {
+      object[key] = value;
+    });
     const json = JSON.stringify(object);
 
     try {
