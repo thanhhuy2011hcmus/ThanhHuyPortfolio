@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { ContactForm } from '../components/ContactForm'; // Chỉnh lại đường dẫn nếu cần
 import {
   ChevronRight,
   Github,
@@ -414,23 +415,14 @@ function Work() {
             <CarouselPrevious aria-label="Thẻ trước" className="hidden sm:flex" />
             <CarouselNext aria-label="Thẻ tiếp theo" className="hidden sm:flex" />
           </Carousel>
+          <section id="contact" className="py-16 mt-12 border-t border-gray-200">
+        <div className="container mx-auto px-4 max-w-3xl">
+          <ContactForm />
+        </div>
+      </section>
         </Reveal>
       </div>
     </section>
-  );
-}
-
-import { ContactForm } from '../components/ContactForm'; // Chỉnh lại đường dẫn nếu cần
-
-export default function HomePage() {
-  return (
-    <div>
-      {/* Các nội dung khác của portfolio */}
-      
-      <section className="py-10">
-        <ContactForm />
-      </section>
-    </div>
   );
 }
 
