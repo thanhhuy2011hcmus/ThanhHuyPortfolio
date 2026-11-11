@@ -14,11 +14,12 @@ export function ContactForm() {
     
     formData.append("access_key", accessKey);
 
-    // CÁCH MỚI: Chuyển đổi dữ liệu sang JSON an toàn, không bị lỗi TypeScript
-    const object: Record<string, any> = {};
+    // SỬA LẠI: Dùng kiểu string thay vì any để vượt qua kiểm duyệt TypeScript của Vercel
+    const object: Record<string, string> = {};
     formData.forEach((value, key) => {
-      object[key] = value;
+      object[key] = value.toString();
     });
+    const json = JSON.stringify(object);
     const json = JSON.stringify(object);
 
     try {
