@@ -9,7 +9,7 @@ export function ContactForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Lưu form lại NGAY, vì sau await thì e.currentTarget sẽ thành null
+    // Lưu form ngay, vì sau await thì e.currentTarget sẽ thành null
     const form = e.currentTarget;
 
     setStatus('loading');
@@ -17,6 +17,10 @@ export function ContactForm() {
 
     const formData = new FormData(form);
     formData.append('access_key', 'a22b2d32-148b-4bcc-b16b-15e1683689ea');
+    formData.append(
+      'subject',
+      `Tin nhắn mới từ ${formData.get('name')?.toString() || 'người lạ'}`
+    );
 
     const payload: Record<string, string> = {};
     formData.forEach((value, key) => {
@@ -37,7 +41,7 @@ export function ContactForm() {
 
       if (data.success) {
         setStatus('success');
-        form.reset(); // dùng biến đã lưu, không dùng e.currentTarget
+        form.reset();
       } else {
         console.error('Lỗi từ Web3Forms:', data);
         setErrorMsg(data.message || 'Không gửi được tin nhắn.');
@@ -51,86 +55,136 @@ export function ContactForm() {
   };
 
   const inputClass =
-    'w-full px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all placeholder:text-gray-400 font-medium';
+    'w-full px-5 py-4 bg-[#1a1a1a] border border-[#2a2a2a] text-gray-100 rounded-2xl outline-none transition-all placeholder:text-gray-500 focus:border-green-500 focus:ring-1 focus:ring-green-500';
 
   return (
-    <div className="max-w-xl mx-auto p-8 bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-100">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">
-          Liên hệ với mình
-        </h2>
-        <p className="text-gray-500 mt-2 font-medium">
-          Hãy để lại lời nhắn, mình sẽ phản hồi sớm nhất.
-        </p>
-      </div>
-
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div>
-          <label htmlFor="email" className="block text-sm font-bold text-gray-800 mb-2">
-            Email của bạn
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            required
-            className={inputClass}
-            placeholder="example@gmail.com"
-          />
+    <section className="min-h-screen bg-[#111111] flex items-center justify-center px-4 py-16">
+      <div className="w-full max-w-xl text-center">
+        {/* Icon */}
+        <div className="mx-auto mb-6 flex h-[70px] w-[70px] items-center justify-center rounded-full bg-green-950/60">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="text-green-500"
+            aria-hidden="true"
+          >
+            <rect x="2" y="4" width="20" height="16" rx="2" />
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+          </svg>
         </div>
 
-        <div>
-          <label htmlFor="subject" className="block text-sm font-bold text-gray-800 mb-2">
-            Tiêu đề
-          </label>
+        <h2 className="text-4xl font-extrabold text-white tracking-tight">Liên hệ</h2>
+        <p className="mt-5 mb-10 font-mono text-sm leading-7 text-gray-400">
+          Ngày sinh: 20/11/2007. Hãy liên hệ với tôi để cùng trao đổi về dữ liệu và công nghệ.
+        </p>
+
+        <form onSubmit={handleSubmit} className="space-y-5 text-left">
           <input
             type="text"
-            id="subject"
-            name="subject"
+            name="name"
             required
+            placeholder="Họ và tên"
+            aria-label="Họ và tên"
             className={inputClass}
-            placeholder="Bạn muốn trao đổi về..."
           />
-        </div>
 
-        <div>
-          <label htmlFor="message" className="block text-sm font-bold text-gray-800 mb-2">
-            Nội dung
-          </label>
+          <input
+            type="email"
+            name="email"
+            required
+            placeholder="Email"
+            aria-label="Email"
+            className={inputClass}
+          />
+
           <textarea
-            id="message"
             name="message"
             required
-            rows={5}
-            className={`${inputClass} resize-none`}
-            placeholder="Nhập nội dung tin nhắn..."
+            rows={6}
+            placeholder="Lời nhắn"
+            aria-label="Lời nhắn"
+            className={`${inputClass} resize-y`}
           />
-        </div>
 
-        <button
-          type="submit"
-          disabled={status === 'loading'}
-          className="w-full bg-blue-600 text-white font-bold py-3.5 px-4 rounded-xl hover:bg-blue-700 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 disabled:bg-blue-300 disabled:cursor-not-allowed disabled:transform-none mt-2"
-        >
-          {status === 'loading' ? 'Đang xử lý...' : 'Gửi tin nhắn'}
-        </button>
+          <button
+            type="submit"
+            disabled={status === 'loading'}
+            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-green-500 px-4 py-4 font-mono font-bold text-black shadow-[0_0_24px_rgba(34,197,94,0.35)] transition-all duration-200 hover:bg-green-400 hover:shadow-[0_0_32px_rgba(34,197,94,0.5)] disabled:cursor-not-allowed disabled:bg-green-800 disabled:text-green-950 disabled:shadow-none"
+          >
+            {status === 'loading' ? (
+              'Đang gửi...'
+            ) : (
+              <>
+                Gửi lời nhắn
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+              </>
+            )}
+          </button>
 
-        {status === 'success' && (
-          <div className="p-4 bg-green-50 rounded-xl border border-green-200 mt-4">
-            <p className="text-green-700 text-sm text-center font-bold">
+          {status === 'success' && (
+            <div
+              role="status"
+              className="rounded-2xl border border-green-500/40 bg-green-500/10 p-4 text-center text-sm font-bold text-green-400"
+            >
               🎉 Gửi thành công! Mình đã nhận được tin nhắn.
-            </p>
-          </div>
-        )}
+            </div>
+          )}
 
-        {status === 'error' && (
-          <div className="p-4 bg-red-50 rounded-xl border border-red-200 mt-4">
-            <p className="text-red-700 text-sm text-center font-bold">
+          {status === 'error' && (
+            <div
+              role="alert"
+              className="rounded-2xl border border-red-500/40 bg-red-500/10 p-4 text-center text-sm font-bold text-red-400"
+            >
               Có lỗi xảy ra: {errorMsg}
-            </p>
-          </div>
-        )}
-      </form>
-    </div>
+            </div>
+          )}
+        </form>
+
+        {/* GitHub */}
+        <a
+          href="https://github.com/thanhhuy2011hcmus"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-10 inline-flex items-center gap-2 font-mono text-sm text-gray-400 transition-colors hover:text-green-400"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+            <path d="M9 18c-4.51 2-5-2-7-2" />
+          </svg>
+          github.com/thanhhuy2011hcmus
+        </a>
+      </div>
+    </section>
   );
 }
